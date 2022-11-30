@@ -5,6 +5,7 @@ import PortfolioItem from "./portfolio-item";
 
 export default class PortfolioContainer extends Component {
 
+    
     constructor() {
         super();
 
@@ -26,8 +27,10 @@ export default class PortfolioContainer extends Component {
 
     getPortfolioItems() {
         // Make a request for a user with a given ID
-        axios.get('https://ryanschmutzler.devcamp.space/portfolio/portfolio_items')
-          .then(response => {
+        axios
+            .get('https://ryanschmutzler.devcamp.space/portfolio/portfolio_items')
+            .then(response => {
+            console.log("response data", response)
             // handle success
             
             this.setState({
@@ -41,32 +44,38 @@ export default class PortfolioContainer extends Component {
           .finally(function () {
             // always executed
           });
-        }
+        }    
 
     portfolioItems() {
-        
-
+        // Data that we'll need:
+        //  - background image: "thumb_image_url"
+        //  - logo
+        //  - description: description
+        //  - id: id
+       
         return this.state.data.map(item => {
             
             return (
-            <PortfolioItem  key={item.id}title={item.name} url={item.url} slug={item.id} />
+            <PortfolioItem  
+                key={item.id}
+                item={item}
+            />
             );
-            
         });
     }
 
     componentDidMount() {
-        this.getPortfolioItems();
+        
     }
 
-  
+    componentDidMount() { 
+        this.getPortfolioItems();
+     }
 
     render() {
         if (this.state.isLoading) {
             return <div>Loading...</div>;
         }
-        
-
         return (
             <div>
                 <h2>{this.state.pageTitle}</h2>
@@ -82,8 +91,6 @@ export default class PortfolioContainer extends Component {
                 </button>
 
                 {this.portfolioItems()}
-
-           
             </div>
         );
     }
