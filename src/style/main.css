@@ -1,0 +1,55 @@
+body {
+  margin: 0px;
+  font-family: "Titillium Web", sans-serif;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.nav-wrapper {
+  display: flex;
+  justify-content: space-between;
+  padding: 30px;
+}
+.nav-wrapper .left-side {
+  display: flex;
+}
+.nav-wrapper .nav-link-wrapper {
+  height: 22px;
+  border-bottom: 1px solid transparent;
+  transform: 0.5s ease-in-out;
+  margin-right: 20px;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+.nav-wrapper .nav-link-wrapper a {
+  color: #8a8a8a;
+  text-decoration: none;
+}
+.nav-wrapper .nav-link-wrapper a:hover {
+  color: black;
+}
+.nav-wrapper .nav-link-wrapper:hover {
+  border-bottom: 1px solid black;
+}
+.nav-wrapper .nav-link-wrapper .nav-link-active {
+  border-bottom: 1px solid black;
+  color: black;
+}
+
+portfolio-items-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+portfolio-items-wrapper .portfolio-item-wrapper {
+  position: relative;
+}
+portfolio-items-wrapper .portfolio-item-wrapper .portfolio-img-background {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 350px;
+  width: 100%;
+}/*# sourceMappingURL=main.css.map */
