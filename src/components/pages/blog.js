@@ -5,7 +5,7 @@ import axios from "axios";
 import BlogItem from "../blog/blog-item";
 import BlogModal from "../modals/blog-modal";
 
- class Blog extends Component {
+class Blog extends Component {
   constructor() {
     super();
 
@@ -17,25 +17,48 @@ import BlogModal from "../modals/blog-modal";
       blogModalIsOpen: false
     };
 
-this.getBlogItems = this.getBlogItems.bind(this);
-this.onScroll = this.onScroll.bind(this);
-window.addEventListener("scroll", this.onScroll, false);
-this.handleNewBlogClick = this.handleNewBlogClick.bind(this);
-this.handleModalClose = this.handleModalClose.bind(this);
-this.handleSuccessfulNewBlogSubmission = this.handleSuccessfulNewBlogSubmission.bind(this);
+    this.getBlogItems = this.getBlogItems.bind(this);
+    this.onScroll = this.onScroll.bind(this);
+    window.addEventListener("scroll", this.onScroll, false);
+    this.handleNewBlogClick = this.handleNewBlogClick.bind(this);
+    this.handleModalClose = this.handleModalClose.bind(this);
+    this.handleSuccessfulNewBlogSubmission = this.handleSuccessfulNewBlogSubmission.bind(
+      this
+    );
+    this.handleDeleteClick = this.handleDeleteClick.bind(this);
+  }
+
+  handleDeleteClick(blog) {
+    axios
+      .delete(
+        `https://api.devcamp.space/portfolio/portfolio_blogs/${blog.id}`,
+        { withCredentials: true }
+      )
+      .then(response => {
+        this.setState({
+          blogItems: this.state.blogItems.filter(blogItem => {
+            return blog.id !== blogItem.id;
+          })
+        });
+
+        return response.data;
+      })
+      .catch(error => {
+        console.log("delete blog error", error);
+      });
   }
 
   handleSuccessfulNewBlogSubmission(blog) {
     this.setState({
       blogModalIsOpen: false,
       blogItems: [blog].concat(this.state.blogItems)
-    })
+    });
   }
 
   handleModalClose() {
     this.setState({
       blogModalIsOpen: false
-    })
+    });
   }
 
   handleNewBlogClick() {
@@ -45,21 +68,20 @@ this.handleSuccessfulNewBlogSubmission = this.handleSuccessfulNewBlogSubmission.
   }
 
   onScroll() {
-      if (
-        this.state.isLoading ||
-        this.state.blogItems.length === this.state.totalCount
-      ) {
-        return;
-      }
+    if (
+      this.state.isLoading ||
+      this.state.blogItems.length === this.state.totalCount
+    ) {
+      return;
+    }
 
-      if (
-        window.innerHeight + document.documentElement.scrollTop ===
-        document.documentElement.offsetHeight
-      ) {
-        this.getBlogItems();
-      }
+    if (
+      window.innerHeight + document.documentElement.scrollTop ===
+      document.documentElement.offsetHeight
+    ) {
+      this.getBlogItems();
+    }
   }
- 
 
   getBlogItems() {
     this.setState({
@@ -68,8 +90,9 @@ this.handleSuccessfulNewBlogSubmission = this.handleSuccessfulNewBlogSubmission.
 
     axios
       .get(
-        `https://ryanschmutzler.devcamp.space/portfolio/portfolio_blogs?page=${this
-          .state.currentPage}`,
+        `https://jordan.devcamp.space/portfolio/portfolio_blogs?page=${
+          this.state.currentPage
+        }`,
         {
           withCredentials: true
         }
@@ -97,16 +120,29 @@ this.handleSuccessfulNewBlogSubmission = this.handleSuccessfulNewBlogSubmission.
 
   render() {
     const blogRecords = this.state.blogItems.map(blogItem => {
-      return <BlogItem key={blogItem.id} blogItem={blogItem} />;
+      if (this.props.loggedInStatus === "LOGGED_IN") {
+        return (
+          <div key={blogItem.id} className="admin-blog-wrapper">
+            <BlogItem blogItem={blogItem} />
+            <a onClick={() => this.handleDeleteClick(blogItem)}>
+              <FontAwesomeIcon icon="trash" />
+            </a>
+          </div>
+        );
+      } else {
+        return <BlogItem key={blogItem.id} blogItem={blogItem} />;
+      }
     });
 
     return (
-      <div className='blog-container'> 
-        <BlogModal 
+      <div className="blog-container">
+        <BlogModal
+          handleSuccessfulNewBlogSubmission={
+            this.handleSuccessfulNewBlogSubmission
+          }
           handleModalClose={this.handleModalClose}
-          modalIsOpen={this.state.blogModalIsOpen} 
-          handleSuccessfulNewBlogSubmission={this.handleSuccessfulNewBlogSubmission}
-        /> 
+          modalIsOpen={this.state.blogModalIsOpen}
+        />
 
         {this.props.loggedInStatus === "LOGGED_IN" ? (
           <div className="new-blog-link">
@@ -115,12 +151,14 @@ this.handleSuccessfulNewBlogSubmission = this.handleSuccessfulNewBlogSubmission.
             </a>
           </div>
         ) : null}
-        
-            <div className='content-container'>{blogRecords}</div>
 
-            {this.state.isLoading ? (
-            <div className="content-loader"><FontAwesomeIcon icon="spinner" spin/></div>  
-            ) : null}
+        <div className="content-container">{blogRecords}</div>
+
+        {this.state.isLoading ? (
+          <div className="content-loader">
+            <FontAwesomeIcon icon="spinner" spin />
+          </div>
+        ) : null}
       </div>
     );
   }

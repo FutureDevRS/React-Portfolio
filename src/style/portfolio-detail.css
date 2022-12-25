@@ -1,0 +1,21 @@
+.portfolio-detail-wrapper {
+  width: 100vw;
+}
+.portfolio-detail-wrapper .banner {
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0px 15px 20px rgba 232, 233, 110, 0.3;
+}
+.portfolio-detail-wrapper .portfolio-detail-description-wrapper {
+  text-align: center;
+  margin-top: 42px;
+  display: flex;
+  justify-content: center;
+}
+.portfolio-detail-wrapper .portfolio-detail-description-wrapper .description {
+  width: 700px;
+  font-size: 2em;
+  margin-bottom: 50px;
+}/*# sourceMappingURL=portfolio-detail.css.map */

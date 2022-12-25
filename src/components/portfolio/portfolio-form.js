@@ -50,7 +50,7 @@ export default class PortfolioForm extends Component {
             })
         }).catch(error => {
             console.log("deleteImage error", error);
-        })
+        });
     }
                             
     componentDidUpdate() { //? 3 Created componentDidUpdate function
